@@ -22,6 +22,7 @@ options.add_experimental_option("excludeSwitches", ["enable-logging"])
 options.add_argument("--headless")
 options.add_argument("user-agent=" + user_agent)
 driver = webdriver.Chrome(ChromeDriverManager().install(),options=options)
+filepath = "E:/Code and Projects/Output/LNSearch Data/"
 
 #To find novel names and links
 def update_link_db():
@@ -55,7 +56,10 @@ def update_eng_name_db():
     all_texts = []
     for a_tag in texts:
         temp1 = a_tag.get_text()
-        temp = a_tag.next_sibling.get_text()
+        try:
+            temp = a_tag.next_sibling.get_text()
+        except:
+            pass
         if(temp!=" "):
             text = re.sub(r'[\({}\)]',"",temp)
             text = re.sub(r'^\s',"",text)
@@ -140,7 +144,11 @@ coverImageName = coverImage.split('/')[-1]
 if(coverImageName.casefold() != 'noimagefound.jpg'):
     urllib.request.urlretrieve(coverImage,coverImageName)
     #Show Image
-    im = Image.open(coverImageName).show()
+    im = Image.open(coverImageName)
+    ImagePath = f'{filepath}'+f'{coverImageName}'
+    im = im.convert('RGB')
+    im.save(f'{ImagePath}','jpeg')
+    im.show(f"{ImagePath}")
 
 #Description
 print(good(bold(under(orange("Description")))))
